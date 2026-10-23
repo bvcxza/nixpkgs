@@ -14,14 +14,13 @@
 
 stdenv.mkDerivation (finalAttrs: {
   pname = "i2pd";
-  version = "2.62.X";
+  version = "3.0.0";
 
   src = fetchFromGitHub {
     owner = "PurpleI2P";
     repo = "i2pd";
-#    tag = finalAttrs.version;
-    rev = "openssl";
-    hash = "sha256-cc7oi6vrLyVscNZSBL2Hd/vRZ871f0O+zdX1XM77FX0=";
+    tag = finalAttrs.version;
+    hash = "sha256-CoggAEUnGhnUudHxxGvOng4VApWZx744RYdrzG5ftFM=";
   };
 
   buildInputs = [
