@@ -9,7 +9,7 @@
 
 rustPlatform.buildRustPackage (finalAttrs: {
   pname = "radicle-artifact";
-  version = "0.19.0";
+  version = "0.23.1";
 
   __structuredAttrs = true;
 
@@ -17,10 +17,10 @@ rustPlatform.buildRustPackage (finalAttrs: {
     seed = "radicle.norman.life";
     repo = "z4VYyJ9KuwMNkXGQnmKuGPGKw3inv";
     tag = "releases/${finalAttrs.version}";
-    hash = "sha256-b+yi/Kqmtn1Lpnc7Vt1Od0DAx6cOahrru0+Lb6hbM10=";
+    hash = "sha256-9iUkPdO6Cc861eiYmvqfoCiG2AcSBWc4hsDUxqfUKQ8=";
   };
 
-  cargoHash = "sha256-EPDkr9qT5X8n3FO3v8RSpTl1Alz1zndu5RExN7gPXxk=";
+  cargoHash = "sha256-cQqBN3Pw0tFvTRy90LHJi9yTebM0qimkJB1vz5MLo5A=";
 
   nativeCheckInputs = [ gitMinimal ];
 

@@ -14,7 +14,6 @@ let
     getExe
     listToAttrs
     literalExpression
-    maintainers
     makeBinPath
     mapAttrs'
     mapAttrsToList
@@ -73,9 +72,7 @@ let
   nixosConfig = config;
 in
 {
-  meta.maintainers = with maintainers; [
-    nazarewk
-  ];
+  meta.maintainers = [ ];
   meta.doc = ./netbird.md;
 
   imports = [
@@ -501,13 +498,6 @@ in
       };
     })
     {
-      assertions = lib.optionals (cfg.clients != { }) [
-        {
-          assertion = !(config.networking.nftables.enable && config.networking.nftables.flushRuleset);
-          message = "networking.nftables.flushRuleset is enabled, which will flush the nftables tables installed by services.netbird.clients. Flushing these tables will break netbird functionality including DNS resolution and network routing.";
-        }
-      ];
-
       boot.extraModulePackages = optional (
         cfg.clients != { } && (versionOlder kernel.version "5.6")
       ) kernelPackages.wireguard;

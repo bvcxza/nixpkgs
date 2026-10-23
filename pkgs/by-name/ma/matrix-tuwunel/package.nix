@@ -89,13 +89,13 @@ let
 in
 rustPlatform.buildRustPackage (finalAttrs: {
   pname = "matrix-tuwunel";
-  version = "1.9.2";
+  version = "1.9.4";
 
   src = fetchFromGitHub {
     owner = "matrix-construct";
     repo = "tuwunel";
     tag = "v${finalAttrs.version}";
-    hash = "sha256-5X43mZamOaqRyyMChwJ966kpfCbNYBks4O8KM+3h2L4=";
+    hash = "sha256-TuX1JOCTOaynGho9lGpBKjuoJQXT69kp25FM99rDGcg=";
   };
 
   # Integration tests require networking. Only run the unit tests.
@@ -104,7 +104,7 @@ rustPlatform.buildRustPackage (finalAttrs: {
     "--bins"
   ];
 
-  cargoHash = "sha256-Jt03Xy2i0GZJcpgm35AvI+8huhidYG3FyDS1YOY2Rmw=";
+  cargoHash = "sha256-bQxdrPghImV6OytnTGtoVyEEh80FfI4ApYNE0zsoETI=";
 
   nativeBuildInputs = [
     pkg-config
@@ -205,5 +205,6 @@ rustPlatform.buildRustPackage (finalAttrs: {
       scvalex
     ];
     mainProgram = "tuwunel";
+    broken = stdenv.hostPlatform.isDarwin; # macos build fails with a rocksdb linker error
   };
 })

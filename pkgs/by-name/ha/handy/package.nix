@@ -15,6 +15,7 @@
   swift,
   apple-sdk_26,
   symlinkJoin,
+  nix-update-script,
 
   # Linux-only
   webkitgtk_4_1,
@@ -55,7 +56,7 @@ let
 in
 rustPlatform.buildRustPackage (finalAttrs: {
   pname = "handy";
-  version = "0.9.6";
+  version = "0.9.8";
 
   __structuredAttrs = true;
 
@@ -63,11 +64,11 @@ rustPlatform.buildRustPackage (finalAttrs: {
     owner = "cjpais";
     repo = "Handy";
     tag = "v${finalAttrs.version}";
-    hash = "sha256-6eNa9iNjwKgLL8t72GeMHTxjyHaeVl+9VF/QWjlHzts=";
+    hash = "sha256-3j73ss9pwkcK4MfeNY/9PFp//Cbc0OSICDdlmHprSso=";
   };
 
   cargoRoot = "src-tauri";
-  cargoHash = "sha256-fzTklIGMCE2ugLc6KIj3XDqxB4qjhtm14LKBUb8kBWE=";
+  cargoHash = "sha256-I9OLUF96PgqdcYlycBICfl43rENkiyzZDLmtmnNX87A=";
 
   nativeInstallInputs = [ jq ];
 
@@ -91,6 +92,14 @@ rustPlatform.buildRustPackage (finalAttrs: {
     # Strip cbindgen build steps
     find "$cargoDepsCopy" -path "*/ferrous-opencc-*/build.rs" \
       -exec sed -i -e '/cbindgen::Builder::new/{:l;/write_to_file/!{N;bl};d}' {} +
+
+    # FoundationModels requires macros that are only shipped with Xcode. The 26.x SDK in Nixpkgs does not have them.
+    substituteInPlace src-tauri/build.rs \
+      --replace-fail 'has_foundation_models = framework_path.exists()' ' has_foundation_models = false'
+
+    # Disable the in-app updater
+    substituteInPlace src/components/update-checker/UpdateChecker.tsx \
+      --replace-fail 'settings?.update_checks_enabled ?? false' 'false'
   ''
   + lib.optionalString stdenv.hostPlatform.isLinux ''
     substituteInPlace "$cargoDepsCopy"/*/libappindicator-sys-*/src/lib.rs \
@@ -153,6 +162,7 @@ rustPlatform.buildRustPackage (finalAttrs: {
     );
   }
   // lib.optionalAttrs stdenv.hostPlatform.isDarwin {
+    NIX_LDFLAGS = "-lclang_rt.osx"; # Make sure `__isPlatformVersionAtLeast` is available for runtime version checks.
     SWIFTC = lib.getExe' swift "swiftc"; # Explicit so the Handy build system can avoid xcrun
   };
 
@@ -249,9 +259,9 @@ rustPlatform.buildRustPackage (finalAttrs: {
 
       outputHash =
         {
-          "x86_64-linux" = "sha256-huOC2smHU0sGIxeyvWmzdewUEpKHfdSGNhf9xWpH9Jk=";
-          "aarch64-linux" = "sha256-UDn8nIgIx23ampe43Qr0j9h+hlU9g1QzzlIlbRH2CKs=";
-          "aarch64-darwin" = "sha256-8Rw4iNvqeq/sRvZpbtZo0f0iPAwu1TeB8Y+ut4kb9uw=";
+          "x86_64-linux" = "sha256-sBrQToz8+tRTAQNZkSE0Ke5mZ0Sfagl8+IE/4VL990E=";
+          "aarch64-linux" = "sha256-Yp1OtXeY4abE4qFdG8K30D2M0fdbRmeQMzk0Y6BrZuw=";
+          "aarch64-darwin" = "sha256-AIxRev4JwrjRJQBnlknOH1QtZarjM9m9ICjB8bNL7Wk=";
         }
         .${stdenv.hostPlatform.system};
 
@@ -263,6 +273,13 @@ rustPlatform.buildRustPackage (finalAttrs: {
       paths = [
         "${pipewire}/lib/alsa-lib"
         "${alsa-plugins}/lib/alsa-lib"
+      ];
+    };
+
+    updateScript = nix-update-script {
+      extraArgs = [
+        "--subpackage"
+        "frontendDeps"
       ];
     };
   };

@@ -8,13 +8,15 @@
 
 buildPythonPackage (finalAttrs: {
   pname = "comfyui-embedded-docs";
-  version = "0.5.11";
+  version = "0.5.13";
   pyproject = true;
 
+  # nixpkgs-update: no auto update
+  # updated via comfyui
   src = fetchPypi {
     pname = "comfyui_embedded_docs";
     inherit (finalAttrs) version;
-    hash = "sha256-HetjmoWqXFY7ULa+ImvTPbG7OpeReI0sP7TYiMwv2n0=";
+    hash = "sha256-odDCe13S0fyOC/PHe1jgZkrvCtRggE5Z4WVKqo4bhJw=";
   };
 
   build-system = [ setuptools ];

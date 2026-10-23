@@ -11,7 +11,6 @@ rustPlatform.buildRustPackage {
   version = "0.1.0-unstable-2026-09-02";
   __structuredAttrs = true;
   __darwinAllowLocalNetworking = true;
-  strictDeps = true;
 
   src = fetchFromGitHub {
     owner = "block";
@@ -27,10 +26,12 @@ rustPlatform.buildRustPackage {
   # reqwest initializes its rustls client in tests and needs a CA bundle.
   nativeCheckInputs = [ cacert ];
 
-  env = lib.optionalAttrs (stdenv.hostPlatform.isDarwin && stdenv.hostPlatform.isAarch64) {
-    # Avoid nondeterministic LC_UUIDs emitted by ld64 on arm64.
-    RUSTFLAGS = "-C link-arg=-Wl,-no_uuid";
-  };
+  # Make darwin builds reproducible by disabling debug symbols in ring.
+  # See: https://github.com/briansmith/ring/pull/2881
+  postPatch = lib.optionalString stdenv.hostPlatform.isDarwin ''
+    substituteInPlace "$cargoDepsCopy"/source-registry-*/ring-0.17.14/build.rs \
+      --replace-fail 'c.flag("-gfull")' 'c.flag("-g0")'
+  '';
 
   preBuild = ''
     # Remap transient Nix build paths for reproducible output.
@@ -43,7 +44,10 @@ rustPlatform.buildRustPackage {
     homepage = "https://github.com/block/buzz";
     license = lib.licenses.asl20;
     mainProgram = "buzz";
-    maintainers = [ lib.maintainers.sebfried ];
+    maintainers = with lib.maintainers; [
+      sebfried
+      kleinbem
+    ];
     platforms = lib.platforms.linux ++ lib.platforms.darwin;
   };
 }
