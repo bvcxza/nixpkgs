@@ -137,7 +137,6 @@
   ./hardware/xpadneo.nix
   ./i18n/input-method/default.nix
   ./i18n/input-method/fcitx5.nix
-  ./i18n/input-method/hime.nix
   ./i18n/input-method/ibus.nix
   ./i18n/input-method/kime.nix
   ./i18n/input-method/nabi.nix
@@ -210,10 +209,11 @@
   ./programs/dmrconfig.nix
   ./programs/droidcam.nix
   ./programs/dublin-traceroute.nix
+  ./programs/dux-calendar.nix
+  ./programs/dux-files.nix
   ./programs/dux-search.nix
   ./programs/ente-auth.nix
   ./programs/environment.nix
-  ./programs/envision.nix
   ./programs/ergohaven-entropy.nix
   ./programs/evince.nix
   ./programs/extra-container.nix
@@ -368,6 +368,7 @@
   ./programs/wayland/gtklock.nix
   ./programs/wayland/hyprland.nix
   ./programs/wayland/hyprlock.nix
+  ./programs/wayland/ironbar.nix
   ./programs/wayland/kanshi.nix
   ./programs/wayland/labwc.nix
   ./programs/wayland/mango.nix
@@ -1933,7 +1934,6 @@
   ./services/web-servers/ttyd.nix
   ./services/web-servers/tusd.nix
   ./services/web-servers/uwsgi.nix
-  ./services/web-servers/varnish/default.nix
   ./services/web-servers/vinyl-cache/default.nix
   ./services/x11/clight.nix
   ./services/x11/colord.nix
