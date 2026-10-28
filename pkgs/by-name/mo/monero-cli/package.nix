@@ -3,6 +3,7 @@
   stdenv,
   fetchFromGitHub,
   cmake,
+  git,
   pkg-config,
   boost186,
   libsodium,
@@ -38,13 +39,14 @@ let
 in
 stdenv.mkDerivation rec {
   pname = "monero-cli";
-  version = "0.18.5.1";
+  version = "0.18.5.4";
 
   src = fetchFromGitHub {
     owner = "monero-project";
     repo = "monero";
     rev = "v${version}";
-    hash = "sha256-RxuhR+GH4Y5kSzNxsqJklRWMbq1K82K3A2V+6JqYR98=";
+    hash = "sha256-IVHnu2w13x3VI06iofkBUvktd1hzIYbpc9yB1Ky4d3k=";
+    deepClone = true; # fetch tags to set VERSIONTAG to "release"
   };
 
   patches = [
@@ -62,6 +64,7 @@ stdenv.mkDerivation rec {
 
   nativeBuildInputs = [
     cmake
+    git
     pkg-config
   ];
 
